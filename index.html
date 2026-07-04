@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="GBK">
+    <title>open_website</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", monospace;
+        }
+
+        body {
+            background: url("https://cdn.mcblock.top/uploads/wallpapers/wp_1769739570200_056ucju6/compressed.webp") no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            padding-right: 40px;
+            position: relative;
+            transition: filter 0.6s ease;
+        }
+
+        .time-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #8b6b4bcc;
+            border: 6px solid #5c432e;
+            box-shadow: inset 0 0 0 3px #a07d58, 0 8px 0 #3a281a;
+            padding: 16px 24px;
+            border-radius: 4px;
+            color: #fff;
+            text-shadow: 3px 3px 0 #222;
+            text-align: center;
+            z-index: 99;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        .time-panel:active {
+            transform: scale(0.95);
+        }
+        .time-hms {
+            font-size: 32px;
+            margin-bottom: 6px;
+            letter-spacing: 2px;
+        }
+        .time-date {
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        .time-sync-status {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+            letter-spacing: 1px;
+            min-height: 14px;
+            transition: all 0.3s;
+        }
+        .time-format-hint {
+            font-size: 9px;
+            margin-top: 2px;
+            opacity: 0.4;
+            letter-spacing: 1px;
+        }
+
+        .bg-switcher {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 100;
+            width: 42px;
+            height: 42px;
+            background: #8b6b4bcc;
+            border: 4px solid #5c432e;
+            box-shadow: inset 0 0 0 2px #a07d58, 0 5px 0 #3a281a;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            text-shadow: 2px 2px 0 #222;
+            user-select: none;
+            transition: all 0.08s ease;
+            text-align: center;
+            line-height: 1;
+        }
+        .bg-switcher:active {
+            transform: translateY(3px);
+            box-shadow: inset 0 0 0 2px #a07d58, 0 2px 0 #3a281a;
+        }
+        .bg-switcher .icon {
+            pointer-events: none;
+        }
+        .bg-tooltip {
+            position: fixed;
+            bottom: 74px;
+            right: 24px;
+            z-index: 101;
+            background: #2a1f14dd;
+            border: 3px solid #5c432e;
+            color: #fff;
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s;
+            white-space: nowrap;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .bg-tooltip.show {
+            opacity: 1;
+        }
+
+        .mc-panel {
+            background: #8b6b4bcc;
+            border: 6px solid #5c432e;
+            box-shadow: inset 0 0 0 3px #a07d58, 0 8px 0 #3a281a;
+            padding: 30px 25px;
+            border-radius: 4px;
+            width: 340px;
+            max-height: 85vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 10;
+        }
+        .mc-panel::-webkit-scrollbar {
+            width: 12px;
+        }
+        .mc-panel::-webkit-scrollbar-track {
+            background: #5c432e;
+            border-radius: 2px;
+        }
+        .mc-panel::-webkit-scrollbar-thumb {
+            background: #a07d58;
+            border: 2px solid #5c432e;
+            border-radius: 2px;
+        }
+        .mc-panel::-webkit-scrollbar-thumb:hover {
+            background: #b8936b;
+        }
+
+        .mc-title {
+            color: #fff;
+            text-shadow: 3px 3px 0 #222;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1 1 100%;
+            min-width: 0;
+            background: #5c3d24;
+            border: 4px solid #3a2514;
+            box-shadow: inset 0 0 0 2px #7a5538, 0 4px 0 #2a1a0c;
+            color: #fff;
+            font-size: 16px;
+            padding: 10px 14px;
+            border-radius: 3px;
+            outline: none;
+            letter-spacing: 1px;
+            transition: all 0.1s;
+        }
+        .search-input::placeholder {
+            color: #bba98d;
+            text-shadow: 1px 1px 0 #222;
+        }
+        .search-input:focus {
+            border-color: #8fc761;
+            box-shadow: inset 0 0 0 2px #a0d870, 0 4px 0 #2a4713;
+        }
+        .search-engine-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .search-engine-tab {
+            flex: 1;
+            min-width: 50px;
+            text-align: center;
+            padding: 7px 6px;
+            font-size: 12px;
+            cursor: pointer;
+            background: #5c432e;
+            border: 3px solid #3a2514;
+            box-shadow: inset 0 0 0 1px #7a5538, 0 3px 0 #2a1a0c;
+            color: #cbb99a;
+            border-radius: 3px;
+            user-select: none;
+            transition: all 0.08s;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 #1a0a00;
+        }
+        .search-engine-tab.active {
+            background: #679942;
+            border-color: #3d6320;
+            box-shadow: inset 0 0 0 2px #8fc761, 0 3px 0 #2a4713;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1a3a08;
+        }
+        .search-engine-tab:active {
+            transform: translateY(2px);
+            box-shadow: inset 0 0 0 1px #7a5538, 0 1px 0 #2a1a0c;
+        }
+        .search-engine-tab.active:active {
+            box-shadow: inset 0 0 0 2px #8fc761, 0 1px 0 #2a4713;
+        }
+        .search-btn {
+            flex: 0 0 auto;
+            padding: 7px 14px;
+            font-size: 13px;
+            cursor: pointer;
+            background: #679942;
+            border: 3px solid #3d6320;
+            box-shadow: inset 0 0 0 2px #8fc761, 0 3px 0 #2a4713;
+            color: #fff;
+            border-radius: 3px;
+            user-select: none;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0 #1a3a08;
+            transition: all 0.08s;
+            white-space: nowrap;
+        }
+        .search-btn:active {
+            transform: translateY(2px);
+            box-shadow: inset 0 0 0 2px #8fc761, 0 1px 0 #2a4713;
+        }
+        .search-divider {
+            width: 100%;
+            height: 2px;
+            background: #5c432e;
+            margin: 14px 0 18px 0;
+            border-radius: 1px;
+            opacity: 0.7;
+        }
+
+        .mc-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            font-size: 20px;
+            padding: 16px 0;
+            margin: 18px 0;
+            background: #679942;
+            border: 4px solid #3d6320;
+            box-shadow: inset 0 0 0 2px #8fc761, 0 6px 0 #2a4713;
+            transition: all 0.08s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        .mc-btn:active {
+            transform: translateY(4px);
+            box-shadow: inset 0 0 0 2px #8fc761, 0 2px 0 #2a4713;
+        }
+        .mc-btn.error {
+            background: #777777;
+            border-color: #444444;
+            box-shadow: inset 0 0 0 2px #999, 0 6px 0 #222;
+        }
+
+        .tip-text {
+            color: #eee;
+            text-shadow: 2px 2px #000;
+            margin-top: 20px;
+            font-size: 14px;
+            text-align: center;
+            cursor: default;
+            user-select: none;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding-right: 10px;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 130px;
+            }
+            .mc-panel {
+                width: 94vw;
+                padding: 20px 14px;
+                max-height: 70vh;
+            }
+            .time-panel {
+                top: 8px;
+                left: 8px;
+                padding: 10px 16px;
+                border-width: 4px;
+            }
+            .time-hms {
+                font-size: 22px;
+            }
+            .time-date {
+                font-size: 12px;
+            }
+            .bg-switcher {
+                bottom: 12px;
+                right: 12px;
+                width: 34px;
+                height: 34px;
+                font-size: 15px;
+            }
+            .bg-tooltip {
+                bottom: 54px;
+                right: 12px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="time-panel" id="timePanel" title="点击切换12/24小时制">
+        <div class="time-hms" id="hms">--:--:--</div>
+        <div class="time-date" id="date">加载中...</div>
+        <div class="time-sync-status" id="syncStatus"> 正在同步网络时间</div>
+        <div class="time-format-hint" id="formatHint">点击切换时间格式</div>
+    </div>
+
+    <div class="bg-switcher" id="bgSwitcher" title="切换背景主题">
+        <span class="icon">??</span>
+    </div>
+    <div class="bg-tooltip" id="bgTooltip">背景主题 1/5</div>
+
+    <div class="mc-panel" id="mcPanel">
+        <h1 class="mc-title">开！！</h1>
+
+        <div class="search-wrapper">
+            <input class="search-input" id="searchInput" type="text" placeholder="搜索点什么吧..." autocomplete="off">
+            <div class="search-engine-tabs" id="engineTabs">
+                <span class="search-engine-tab active" data-engine="google">Google</span>
+                <span class="search-engine-tab" data-engine="bing">Bing</span>
+                <span class="search-engine-tab" data-engine="baidu">百度</span>
+                <span class="search-engine-tab" data-engine="duckduckgo">Duck</span>
+            </div>
+            <button class="search-btn" id="searchBtn">搜索</button>
+        </div>
+        <div class="search-divider"></div>
+
+        <!-- 所有链接均在新窗口打开 -->
+        <div id="presetLinks">
+            <a class="mc-btn" href="https://note.ms/Helloworld150103201003063014Him369258Stars" target="_blank" rel="noopener noreferrer">记事本</a>
+            <a class="mc-btn" href="https://beishanair.github.io/2099/12/31/sum/" target="_blank" rel="noopener noreferrer">打开Minecraft开发教程</a>
+            <a class="mc-btn error" href="https://blog.csdn.net/HJW_233/article/details/157209737" target="_blank" rel="noopener noreferrer">forge开发构建教程（页面解析异常）</a>
+            <a class="mc-btn" href="https://mcblock.top/" target="_blank" rel="noopener noreferrer">Minecraft神秘小网站</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接1</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接2</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接3</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接4</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接5</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接6</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接7</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接8</a>
+        </div>
+
+        <div class="tip-text">(づ′▽`)づ</div>
+    </div>
+
+    <script>
+        (function() {
+            const hmsDom = document.getElementById('hms');
+            const dateDom = document.getElementById('date');
+            const syncStatusDom = document.getElementById('syncStatus');
+            const formatHintDom = document.getElementById('formatHint');
+            const timePanel = document.getElementById('timePanel');
+            const bgSwitcher = document.getElementById('bgSwitcher');
+            const bgTooltip = document.getElementById('bgTooltip');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const engineTabs = document.getElementById('engineTabs');
+            const weekArr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+            let timeOffset = 0;
+            let hasSynced = false;
+            let use12Hour = localStorage.getItem('use12Hour') === 'true';
+            let currentBgIndex = parseInt(localStorage.getItem('bgIndex') || '0', 10);
+            let currentEngine = localStorage.getItem('searchEngine') || 'google';
+            let bgTooltipTimer = null;
+
+            const bgThemes = [
+                { name: '原版默认', filter: 'none', desc: '主题 1/5 · 原版' },
+                { name: '暖色黄昏', filter: 'hue-rotate(25deg) saturate(1.2) brightness(1.05)', desc: '主题 2/5 · 暖色' },
+                { name: '冷色月光', filter: 'hue-rotate(170deg) saturate(0.85) brightness(0.9)', desc: '主题 3/5 · 冷色' },
+                { name: '复古怀旧', filter: 'sepia(40%) hue-rotate(-10deg) brightness(0.95)', desc: '主题 4/5 · 复古' },
+                { name: '暗夜深色', filter: 'brightness(0.55) saturate(0.7) hue-rotate(200deg)', desc: '主题 5/5 · 暗夜' },
+            ];
+
+            function applyBackground(index) {
+                const theme = bgThemes[index % bgThemes.length];
+                document.body.style.filter = theme.filter;
+                currentBgIndex = index % bgThemes.length;
+                localStorage.setItem('bgIndex', currentBgIndex);
+                updateBgTooltip();
+            }
+
+            function updateBgTooltip() {
+                const theme = bgThemes[currentBgIndex];
+                bgTooltip.textContent = theme.desc;
+                bgTooltip.classList.add('show');
+                if (bgTooltipTimer) clearTimeout(bgTooltipTimer);
+                bgTooltipTimer = setTimeout(() => bgTooltip.classList.remove('show'), 1800);
+            }
+
+            function cycleBackground() {
+                applyBackground(currentBgIndex + 1);
+            }
+
+            applyBackground(currentBgIndex);
+            bgSwitcher.addEventListener('click', cycleBackground);
+
+            function updateFormatHint() {
+                formatHintDom.textContent = use12Hour ? '12小时制 · 点击切换' : '24小时制 · 点击切换';
+            }
+            updateFormatHint();
+
+            timePanel.addEventListener('click', () => {
+                use12Hour = !use12Hour;
+                localStorage.setItem('use12Hour', use12Hour);
+                updateFormatHint();
+                updateTime();
+            });
+
+            function formatTime(h, m, s) {
+                const hp = String(h).padStart(2, '0');
+                const mp = String(m).padStart(2, '0');
+                const sp = String(s).padStart(2, '0');
+                if (use12Hour) {
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    let h12 = h % 12;
+                    if (h12 === 0) h12 = 12;
+                    return `${String(h12).padStart(2,'0')}:${mp}:${sp} ${ampm}`;
+                }
+                return `${hp}:${mp}:${sp}`;
+            }
+
+            function updateTime() {
+                const calibratedNow = new Date(Date.now() + timeOffset);
+                const h = calibratedNow.getHours();
+                const m = calibratedNow.getMinutes();
+                const s = calibratedNow.getSeconds();
+                const y = calibratedNow.getFullYear();
+                const mon = String(calibratedNow.getMonth() + 1).padStart(2, '0');
+                const d = String(calibratedNow.getDate()).padStart(2, '0');
+                const week = weekArr[calibratedNow.getDay()];
+                hmsDom.innerText = formatTime(h, m, s);
+                dateDom.innerText = `${y}年${mon}月${d}日 ${week}`;
+            }
+
+            async function fetchFromWorldTimeAPI() {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                try {
+                    const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Shanghai', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    return data.unixtime * 1000;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw new Error('WorldTimeAPI: ' + err.message);
+                }
+            }
+
+            async function fetchFromTimeAPIio() {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                try {
+                    const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Shanghai', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    const utcMs = Date.UTC(data.year, data.month - 1, data.day, data.hour, data.minute, data.seconds, data.milliSeconds || 0) - 8 * 3600 * 1000;
+                    return utcMs;
+                } catch (err) {
+                    clearTimeout(timeoutId);
+                    throw new Error('TimeAPI.io: ' + err.message);
+                }
+            }
+
+            async function syncNetworkTime() {
+                if (!hasSynced) {
+                    syncStatusDom.textContent = ' 正在同步网络时间';
+                    syncStatusDom.style.color = '#ffd700';
+                }
+                let networkUtcMs = null;
+                let apiSource = '';
+                try {
+                    networkUtcMs = await fetchFromWorldTimeAPI();
+                    apiSource = 'WorldTimeAPI';
+                } catch (err1) {
+                    console.warn('主API失败:', err1.message);
+                    try {
+                        networkUtcMs = await fetchFromTimeAPIio();
+                        apiSource = 'TimeAPI.io';
+                    } catch (err2) {
+                        console.error('所有API均失败:', err2.message);
+                        if (!hasSynced) {
+                            syncStatusDom.textContent = ' 网络同步失败，使用本地时间';
+                            syncStatusDom.style.color = '#ff9f43';
+                        }
+                        return;
+                    }
+                }
+                const localNow = Date.now();
+                timeOffset = networkUtcMs - localNow;
+                hasSynced = true;
+                const offsetMs = Math.abs(timeOffset);
+                const offsetSign = timeOffset >= 0 ? '+' : '-';
+                syncStatusDom.textContent = `已同步 · ${apiSource} · 偏差${offsetSign}${(offsetMs/1000).toFixed(2)}秒`;
+                syncStatusDom.style.color = '#7bed9f';
+                console.log(`[时间同步] ${apiSource} 偏移: ${timeOffset}ms`);
+            }
+
+            const engineUrls = {
+                google: 'https://www.google.com/search?q=',
+                bing: 'https://www.bing.com/search?q=',
+                baidu: 'https://www.baidu.com/s?wd=',
+                duckduckgo: 'https://duckduckgo.com/?q=',
+            };
+
+            function setActiveEngineTab(engine) {
+                currentEngine = engine;
+                localStorage.setItem('searchEngine', engine);
+                const tabs = engineTabs.querySelectorAll('.search-engine-tab');
+                tabs.forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.engine === engine);
+                });
+            }
+            setActiveEngineTab(currentEngine);
+
+            engineTabs.addEventListener('click', (e) => {
+                const tab = e.target.closest('.search-engine-tab');
+                if (!tab) return;
+                setActiveEngineTab(tab.dataset.engine);
+                searchInput.focus();
+            });
+
+            function doSearch() {
+                const query = searchInput.value.trim();
+                if (!query) {
+                    searchInput.focus();
+                    return;
+                }
+                const baseUrl = engineUrls[currentEngine] || engineUrls['google'];
+                window.open(baseUrl + encodeURIComponent(query), '_blank');
+            }
+            searchBtn.addEventListener('click', doSearch);
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') doSearch();
+            });
+
+            function init() {
+                updateTime();
+                setInterval(updateTime, 1000);
+                syncNetworkTime();
+                setInterval(syncNetworkTime, 30 * 60 * 1000);
+                updateFormatHint();
+            }
+
+            init();
+            console.log('?? Minecraft导航页已就绪 | 搜索 · 背景切换 · 时间同步 · 新窗口打开链接');
+        })();
+    </script>
+</body>
+</html>
