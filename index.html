@@ -327,50 +327,50 @@
 </head>
 <body>
 
-    <div class="time-panel" id="timePanel" title="����л�12/24Сʱ��">
+    <div class="time-panel" id="timePanel" title="点击切换12/24小时制">
         <div class="time-hms" id="hms">--:--:--</div>
-        <div class="time-date" id="date">������...</div>
-        <div class="time-sync-status" id="syncStatus"> ����ͬ������ʱ��</div>
-        <div class="time-format-hint" id="formatHint">����л�ʱ���ʽ</div>
+        <div class="time-date" id="date">加载中...</div>
+        <div class="time-sync-status" id="syncStatus"> 正在同步网络时间</div>
+        <div class="time-format-hint" id="formatHint">点击切换时间格式</div>
     </div>
 
-    <div class="bg-switcher" id="bgSwitcher" title="�л���������">
+    <div class="bg-switcher" id="bgSwitcher" title="切换背景主题">
         <span class="icon">??</span>
     </div>
-    <div class="bg-tooltip" id="bgTooltip">�������� 1/5</div>
+    <div class="bg-tooltip" id="bgTooltip">背景主题 1/5</div>
 
     <div class="mc-panel" id="mcPanel">
-        <h1 class="mc-title">������</h1>
+        <h1 class="mc-title">开！！</h1>
 
         <div class="search-wrapper">
-            <input class="search-input" id="searchInput" type="text" placeholder="������ʲô��..." autocomplete="off">
+            <input class="search-input" id="searchInput" type="text" placeholder="搜索点什么吧..." autocomplete="off">
             <div class="search-engine-tabs" id="engineTabs">
                 <span class="search-engine-tab active" data-engine="google">Google</span>
                 <span class="search-engine-tab" data-engine="bing">Bing</span>
-                <span class="search-engine-tab" data-engine="baidu">�ٶ�</span>
+                <span class="search-engine-tab" data-engine="baidu">百度</span>
                 <span class="search-engine-tab" data-engine="duckduckgo">Duck</span>
             </div>
-            <button class="search-btn" id="searchBtn">����</button>
+            <button class="search-btn" id="searchBtn">搜索</button>
         </div>
         <div class="search-divider"></div>
 
-        <!-- �������Ӿ����´��ڴ� -->
+        <!-- 所有链接均在新窗口打开 -->
         <div id="presetLinks">
-            <a class="mc-btn" href="https://note.ms/Helloworld150103201003063014Him369258Stars" target="_blank" rel="noopener noreferrer">���±�</a>
-            <a class="mc-btn" href="https://beishanair.github.io/2099/12/31/sum/" target="_blank" rel="noopener noreferrer">��Minecraft�����̳�</a>
-            <a class="mc-btn error" href="https://blog.csdn.net/HJW_233/article/details/157209737" target="_blank" rel="noopener noreferrer">forge���������̳̣�ҳ������쳣��</a>
-            <a class="mc-btn" href="https://mcblock.top/" target="_blank" rel="noopener noreferrer">Minecraft����С��վ</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������1</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������2</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������3</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������4</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������5</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������6</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������7</a>
-            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">��������8</a>
+            <a class="mc-btn" href="https://note.ms/Helloworld150103201003063014Him369258Stars" target="_blank" rel="noopener noreferrer">记事本</a>
+            <a class="mc-btn" href="https://beishanair.github.io/2099/12/31/sum/" target="_blank" rel="noopener noreferrer">打开Minecraft开发教程</a>
+            <a class="mc-btn error" href="https://blog.csdn.net/HJW_233/article/details/157209737" target="_blank" rel="noopener noreferrer">forge开发构建教程（页面解析异常）</a>
+            <a class="mc-btn" href="https://mcblock.top/" target="_blank" rel="noopener noreferrer">Minecraft神秘小网站</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接1</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接2</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接3</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接4</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接5</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接6</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接7</a>
+            <a class="mc-btn" href="#" target="_blank" rel="noopener noreferrer">测试链接8</a>
         </div>
 
-        <div class="tip-text">(�š䨌`)��</div>
+        <div class="tip-text">(づ′▽`)づ</div>
     </div>
 
     <script>
@@ -385,7 +385,7 @@
             const searchInput = document.getElementById('searchInput');
             const searchBtn = document.getElementById('searchBtn');
             const engineTabs = document.getElementById('engineTabs');
-            const weekArr = ['������', '����һ', '���ڶ�', '������', '������', '������', '������'];
+            const weekArr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
             let timeOffset = 0;
             let hasSynced = false;
@@ -395,11 +395,11 @@
             let bgTooltipTimer = null;
 
             const bgThemes = [
-                { name: 'ԭ��Ĭ��', filter: 'none', desc: '���� 1/5 �� ԭ��' },
-                { name: 'ůɫ�ƻ�', filter: 'hue-rotate(25deg) saturate(1.2) brightness(1.05)', desc: '���� 2/5 �� ůɫ' },
-                { name: '��ɫ�¹�', filter: 'hue-rotate(170deg) saturate(0.85) brightness(0.9)', desc: '���� 3/5 �� ��ɫ' },
-                { name: '���Ż���', filter: 'sepia(40%) hue-rotate(-10deg) brightness(0.95)', desc: '���� 4/5 �� ����' },
-                { name: '��ҹ��ɫ', filter: 'brightness(0.55) saturate(0.7) hue-rotate(200deg)', desc: '���� 5/5 �� ��ҹ' },
+                { name: '原版默认', filter: 'none', desc: '主题 1/5 · 原版' },
+                { name: '暖色黄昏', filter: 'hue-rotate(25deg) saturate(1.2) brightness(1.05)', desc: '主题 2/5 · 暖色' },
+                { name: '冷色月光', filter: 'hue-rotate(170deg) saturate(0.85) brightness(0.9)', desc: '主题 3/5 · 冷色' },
+                { name: '复古怀旧', filter: 'sepia(40%) hue-rotate(-10deg) brightness(0.95)', desc: '主题 4/5 · 复古' },
+                { name: '暗夜深色', filter: 'brightness(0.55) saturate(0.7) hue-rotate(200deg)', desc: '主题 5/5 · 暗夜' },
             ];
 
             function applyBackground(index) {
@@ -426,7 +426,7 @@
             bgSwitcher.addEventListener('click', cycleBackground);
 
             function updateFormatHint() {
-                formatHintDom.textContent = use12Hour ? '12Сʱ�� �� ����л�' : '24Сʱ�� �� ����л�';
+                formatHintDom.textContent = use12Hour ? '12小时制 · 点击切换' : '24小时制 · 点击切换';
             }
             updateFormatHint();
 
@@ -460,7 +460,7 @@
                 const d = String(calibratedNow.getDate()).padStart(2, '0');
                 const week = weekArr[calibratedNow.getDay()];
                 hmsDom.innerText = formatTime(h, m, s);
-                dateDom.innerText = `${y}��${mon}��${d}�� ${week}`;
+                dateDom.innerText = `${y}年${mon}月${d}日 ${week}`;
             }
 
             async function fetchFromWorldTimeAPI() {
@@ -496,7 +496,7 @@
 
             async function syncNetworkTime() {
                 if (!hasSynced) {
-                    syncStatusDom.textContent = ' ����ͬ������ʱ��';
+                    syncStatusDom.textContent = ' 正在同步网络时间';
                     syncStatusDom.style.color = '#ffd700';
                 }
                 let networkUtcMs = null;
@@ -505,14 +505,14 @@
                     networkUtcMs = await fetchFromWorldTimeAPI();
                     apiSource = 'WorldTimeAPI';
                 } catch (err1) {
-                    console.warn('��APIʧ��:', err1.message);
+                    console.warn('主API失败:', err1.message);
                     try {
                         networkUtcMs = await fetchFromTimeAPIio();
                         apiSource = 'TimeAPI.io';
                     } catch (err2) {
-                        console.error('����API��ʧ��:', err2.message);
+                        console.error('所有API均失败:', err2.message);
                         if (!hasSynced) {
-                            syncStatusDom.textContent = ' ����ͬ��ʧ�ܣ�ʹ�ñ���ʱ��';
+                            syncStatusDom.textContent = ' 网络同步失败，使用本地时间';
                             syncStatusDom.style.color = '#ff9f43';
                         }
                         return;
@@ -523,9 +523,9 @@
                 hasSynced = true;
                 const offsetMs = Math.abs(timeOffset);
                 const offsetSign = timeOffset >= 0 ? '+' : '-';
-                syncStatusDom.textContent = `��ͬ�� �� ${apiSource} �� ƫ��${offsetSign}${(offsetMs/1000).toFixed(2)}��`;
+                syncStatusDom.textContent = `已同步 · ${apiSource} · 偏差${offsetSign}${(offsetMs/1000).toFixed(2)}秒`;
                 syncStatusDom.style.color = '#7bed9f';
-                console.log(`[ʱ��ͬ��] ${apiSource} ƫ��: ${timeOffset}ms`);
+                console.log(`[时间同步] ${apiSource} 偏移: ${timeOffset}ms`);
             }
 
             const engineUrls = {
@@ -575,7 +575,7 @@
             }
 
             init();
-            console.log('?? Minecraft����ҳ�Ѿ��� | ���� �� �����л� �� ʱ��ͬ�� �� �´��ڴ�����');
+            console.log('?? Minecraft导航页已就绪 | 搜索 · 背景切换 · 时间同步 · 新窗口打开链接');
         })();
     </script>
 </body>
